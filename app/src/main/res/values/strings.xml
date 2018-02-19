@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">TimelapseCreator</string>
+    <string name="app_name">Timelapse Creator</string>
+
+    <!-- Button titles -->
+    <string name="btn_create">Create</string>
+    <string name="btn_choose_directory">Choose Directory</string>
+    <!-- Button titles -->
+
+    <!-- Hints -->
+    <string name="hint_starting_number">Start Number</string>
+    <string name="hint_frame_count">Frame Count</string>
+    <string name="hint_fps">Frames per Second</string>
+    <!-- Hints -->
+
 </resources>
