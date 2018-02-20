@@ -6,13 +6,11 @@ package io.github.sdsstudios.timelapsecreator
 
 interface TimelapseCreatorView {
     var directory: String
-    var fileName: String
-    var frameCount: Int
+    var timelapseName: String
     var framesPerSecond: Int
-    var startNumber: Int
 
-    val anyErrors: Boolean
-
+    fun anyErrors(): Boolean
     fun changeProgressBar()
+    fun openDocumentsUI()
     fun showMessage(stringId: Int)
 }

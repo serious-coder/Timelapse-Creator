@@ -10,14 +10,12 @@ class TimelapseManager(private val mView: TimelapseCreatorView) {
 
     companion object {
         private const val KEY_DIRECTORY = "directory"
-        private const val KEY_FILE_NAME = "file_name"
-        private const val KEY_FRAME_COUNT = "frame_count"
+        private const val KEY_TIMELAPSE_NAME = "timelapse_name"
         private const val KEY_FRAMES_PER_SECOND = "fps"
-        private const val KEY_START_NUMBER = "start_number"
     }
 
     fun createTimelapse() {
-        if (!mView.anyErrors) {
+        if (!mView.anyErrors()) {
 
         }
     }
@@ -27,20 +25,20 @@ class TimelapseManager(private val mView: TimelapseCreatorView) {
             mView.directory = bundle.getString(KEY_DIRECTORY)
         }
 
-        mView.fileName = bundle.getString(KEY_FILE_NAME)
-        mView.frameCount = bundle.getInt(KEY_FRAME_COUNT)
+        mView.timelapseName = bundle.getString(KEY_TIMELAPSE_NAME)
         mView.framesPerSecond = bundle.getInt(KEY_FRAMES_PER_SECOND)
-        mView.startNumber = bundle.getInt(KEY_START_NUMBER)
     }
 
     fun saveState(bundle: Bundle): Bundle {
 
         bundle.putString(KEY_DIRECTORY, mView.directory)
-        bundle.putString(KEY_FILE_NAME, mView.fileName)
-        bundle.putInt(KEY_FRAME_COUNT, mView.frameCount)
+        bundle.putString(KEY_TIMELAPSE_NAME, mView.timelapseName)
         bundle.putInt(KEY_FRAMES_PER_SECOND, mView.framesPerSecond)
-        bundle.putInt(KEY_START_NUMBER, mView.startNumber)
 
         return bundle
+    }
+
+    fun chooseDirectory() {
+        mView.openDocumentsUI()
     }
 }
