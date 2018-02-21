@@ -1,19 +1,28 @@
 package io.github.sdsstudios.timelapsecreator
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.coroutines.experimental.buildSequence
+
+
 
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
     companion object {
         private const val CHOOSE_DIR_REQUEST_CODE = 123
+
+        private const val KEY_DIRECTORY = "directory"
+        private const val KEY_TIMELAPSE_NAME = "timelapse_name"
+        private const val KEY_FRAMES_PER_SECOND = "fps"
     }
 
     override var directory: String = ""
@@ -30,7 +39,11 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
             if (value != 0) editTextFPS.setText(value.toString())
         }
 
-    private val mTimelapseManager = TimelapseManager(this)
+    private val mImageAdapter by lazy {
+        ImageAdapter(applicationContext, ArrayList())
+    }
+
+    private val mTimelapseManager = io.github.sdsstudios.timelapsecreator.TimelapseManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,27 +56,37 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         textInputLayoutFPS.onTextChanged { textInputLayoutFPS.checkForErrors() }
         textInputLayoutTimelapseName.onTextChanged { textInputLayoutTimelapseName.checkForErrors() }
 
-        buttonChoosePhotos.setOnClickListener { mTimelapseManager.chooseDirectory() }
+        buttonChoosePhotos.setOnClickListener { chooseDirectory() }
         buttonCreate.setOnClickListener { mTimelapseManager.createTimelapse() }
+
+        recyclerViewImages.layoutManager = GridLayoutManager(this, 2)
+        recyclerViewImages.adapter = mImageAdapter
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(mTimelapseManager.saveState(outState!!))
+
+        outState!!.putString(KEY_DIRECTORY, directory)
+        outState.putString(KEY_TIMELAPSE_NAME, timelapseName)
+        outState.putInt(KEY_FRAMES_PER_SECOND, framesPerSecond)
+
+        super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        mTimelapseManager.restoreState(savedInstanceState!!)
+        directory = savedInstanceState!!.getString(KEY_DIRECTORY)
+        timelapseName = savedInstanceState.getString(KEY_TIMELAPSE_NAME)
+        framesPerSecond = savedInstanceState.getInt(KEY_FRAMES_PER_SECOND)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CHOOSE_DIR_REQUEST_CODE && resultCode == RESULT_OK) {
-            val clipData = data!!.clipData
+            val uri = data!!.clipData
 
-            if (clipData == null) {
+            if (uri == null) {
                 Snackbar.make(
                         constraintLayout,
                         R.string.error_must_select_more_than_one,
@@ -71,7 +94,13 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 ).show()
 
             } else {
-                directory = clipData.toString()
+                val uriList = buildSequence {
+                    for (i in 0 until uri.itemCount) {
+                        yield(uri.getItemAt(i).uri)
+                    }
+                }.toList()
+
+                invalidateImageAdapter(uriList)
             }
         }
     }
@@ -82,19 +111,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
     override fun showMessage(stringId: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun openDocumentsUI() {
-        val intent = Intent()
-
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.action = Intent.ACTION_GET_CONTENT
-
-        startActivityForResult(
-                Intent.createChooser(intent, "Select Picture"),
-                CHOOSE_DIR_REQUEST_CODE
-        )
     }
 
     override fun anyErrors(): Boolean {
@@ -139,5 +155,27 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 onTextChanged()
             }
         })
+    }
+
+    private fun chooseDirectory() {
+        openDocumentsUI()
+    }
+
+    private fun openDocumentsUI() {
+        val intent = Intent()
+
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        intent.action = Intent.ACTION_GET_CONTENT
+
+        startActivityForResult(
+                Intent.createChooser(intent, "Select Picture"),
+                CHOOSE_DIR_REQUEST_CODE
+        )
+    }
+
+    private fun invalidateImageAdapter(uriList: List<Uri>) {
+        mImageAdapter.uriList = uriList.toMutableList()
+        mImageAdapter.notifyDataSetChanged()
     }
 }

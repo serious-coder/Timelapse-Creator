@@ -11,6 +11,5 @@ interface TimelapseCreatorView {
 
     fun anyErrors(): Boolean
     fun changeProgressBar()
-    fun openDocumentsUI()
     fun showMessage(stringId: Int)
 }
