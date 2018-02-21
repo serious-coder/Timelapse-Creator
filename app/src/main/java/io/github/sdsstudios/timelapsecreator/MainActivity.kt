@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         private const val KEY_DIRECTORY = "directory"
         private const val KEY_TIMELAPSE_NAME = "timelapse_name"
         private const val KEY_FRAMES_PER_SECOND = "fps"
+        private const val KEY_IMAGES = "images"
     }
 
     override var directory: String = ""
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         outState!!.putString(KEY_DIRECTORY, directory)
         outState.putString(KEY_TIMELAPSE_NAME, timelapseName)
         outState.putInt(KEY_FRAMES_PER_SECOND, framesPerSecond)
+        outState.putStringArray(KEY_IMAGES, mImageAdapter.uriList.map { it.toString() }.toTypedArray())
 
         super.onSaveInstanceState(outState)
     }
@@ -78,6 +80,9 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         directory = savedInstanceState!!.getString(KEY_DIRECTORY)
         timelapseName = savedInstanceState.getString(KEY_TIMELAPSE_NAME)
         framesPerSecond = savedInstanceState.getInt(KEY_FRAMES_PER_SECOND)
+
+        mImageAdapter.uriList = savedInstanceState.getStringArray(KEY_IMAGES)
+                .map { Uri.parse(it) }.toMutableList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
