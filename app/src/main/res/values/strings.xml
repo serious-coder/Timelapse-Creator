@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Timelapse Creator</string>
 
+    <string-array name="image_type_array">
+        <item>.jpg/.JPG/.jpeg/.JPEG</item>
+        <item>.png</item>
+    </string-array>
+
     <!-- Button titles -->
     <string name="btn_create">Create</string>
     <string name="btn_choose_photos">Choose Photos</string>
