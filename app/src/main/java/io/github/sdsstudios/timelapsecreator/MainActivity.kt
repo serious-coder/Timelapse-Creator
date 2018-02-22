@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
             if (value != 0) editTextFPS.setText(value.toString())
         }
 
-    override var imageType: ImageType
+    override var imageType: String
         get() = when (spinnerImageType.selectedItemPosition) {
             0 -> ImageType.JPG
             else -> ImageType.PNG
@@ -92,10 +92,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         outState.putInt(KEY_FRAMES_PER_SECOND, framesPerSecond)
         outState.putStringArray(KEY_IMAGES,
                 mImageAdapter.uriList.map { it.toString() }.toTypedArray())
-
-        val imageTypeInt = if (imageType == ImageType.JPG) 0 else 1
-
-        outState.putInt(KEY_IMAGE_TYPE, imageTypeInt)
+        outState.putString(KEY_IMAGE_TYPE, imageType)
 
         super.onSaveInstanceState(outState)
     }
@@ -106,10 +103,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         directory = savedInstanceState!!.getString(KEY_DIRECTORY)
         timelapseName = savedInstanceState.getString(KEY_TIMELAPSE_NAME)
         framesPerSecond = savedInstanceState.getInt(KEY_FRAMES_PER_SECOND)
-
-        val imageTypeInt = savedInstanceState.getInt(KEY_IMAGE_TYPE)
-
-        imageType = if (imageTypeInt == 0) ImageType.JPG else ImageType.PNG
+        imageType = savedInstanceState.getString(KEY_IMAGE_TYPE)
 
         mImageAdapter.uriList = savedInstanceState.getStringArray(KEY_IMAGES)
                 .map { Uri.parse(it) }.toMutableList()
@@ -199,7 +193,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
     private fun openDocumentsUI() {
         val intent = Intent()
 
-        intent.type = "image/*"
+        intent.type = imageType
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.action = Intent.ACTION_GET_CONTENT
 
