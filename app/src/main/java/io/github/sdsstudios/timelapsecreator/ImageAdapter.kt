@@ -1,6 +1,7 @@
 package io.github.sdsstudios.timelapsecreator
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
@@ -49,5 +50,17 @@ class ImageAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.findViewById<AppCompatImageView>(R.id.imageView)
+
+        private val mImageViewRemove =
+                itemView.findViewById<AppCompatImageView>(R.id.imageViewRemove)
+
+        init {
+            imageView.setColorFilter(Color.argb(90, 0, 0, 0))
+
+            mImageViewRemove.setOnClickListener {
+                uriList.removeAt(adapterPosition)
+                notifyItemRemoved(adapterPosition)
+            }
+        }
     }
 }

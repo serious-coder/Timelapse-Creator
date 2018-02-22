@@ -5,7 +5,6 @@ package io.github.sdsstudios.timelapsecreator
  */
 
 class TimelapseManager(private val mView: TimelapseCreatorView) {
-
     fun createTimelapse() {
         if (!mView.anyErrors()) {
 
