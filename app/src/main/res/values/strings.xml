@@ -8,7 +8,7 @@
 
     <!-- Button titles -->
     <string name="btn_create">Create</string>
-    <string name="btn_choose_photos">Choose Photos</string>
+    <string name="btn_select_images">Select Images</string>
     <!-- Button titles -->
 
     <!-- Hints -->
@@ -20,6 +20,8 @@
     <string name="error_cant_be_empty">Can\'t be empty!</string>
     <string name="error_cant_equal_zero">Can\'t equal zero!</string>
     <string name="error_must_select_more_than_one">Must select multiple pictures!</string>
+    <string name="error_must_select_images">Must select images!</string>
+    <string name="errors_need_solving">Errors need solving!</string>
     <!-- Error messages -->
 
 </resources>
