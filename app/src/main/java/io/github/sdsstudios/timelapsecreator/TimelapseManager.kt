@@ -5,9 +5,16 @@ package io.github.sdsstudios.timelapsecreator
  */
 
 class TimelapseManager(private val mView: TimelapseCreatorView) {
-    fun createTimelapse() {
-        if (!mView.anyErrors()) {
 
+    fun createTimelapse() {
+        if (mView.anyErrors()) {
+            mView.showSnackbarMessage(R.string.errors_need_solving)
+            return
+        }
+
+        if (mView.uriList.isEmpty()) {
+            mView.showSnackbarMessage(R.string.error_must_select_images)
+            return
         }
     }
 }
