@@ -17,7 +17,7 @@ import kotlin.coroutines.experimental.buildSequence
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
     companion object {
-        private const val CHOOSE_DIR_REQUEST_CODE = 123
+        private const val CHOOSE_FILES_REQUEST_CODE = 123
 
         private const val KEY_DIRECTORY = "directory"
         private const val KEY_TIMELAPSE_NAME = "timelapse_name"
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == CHOOSE_DIR_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == CHOOSE_FILES_REQUEST_CODE && resultCode == RESULT_OK) {
             val uri = data!!.clipData
 
             if (uri == null) {
@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
         startActivityForResult(
                 Intent.createChooser(intent, "Select Picture"),
-                CHOOSE_DIR_REQUEST_CODE
+                CHOOSE_FILES_REQUEST_CODE
         )
     }
 
