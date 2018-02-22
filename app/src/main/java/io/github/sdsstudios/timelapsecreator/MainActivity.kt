@@ -10,10 +10,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.coroutines.experimental.buildSequence
-
-
 
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         ImageAdapter(applicationContext, ArrayList())
     }
 
-    private val mTimelapseManager = io.github.sdsstudios.timelapsecreator.TimelapseManager(this)
+    private val mTimelapseManager = TimelapseManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +59,19 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         buttonChoosePhotos.setOnClickListener { chooseDirectory() }
         buttonCreate.setOnClickListener { mTimelapseManager.createTimelapse() }
 
-        recyclerViewImages.layoutManager = GridLayoutManager(this, 2)
-        recyclerViewImages.adapter = mImageAdapter
+        recyclerViewImages.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+
+                    override fun onGlobalLayout() {
+                        recyclerViewImages.layoutManager = GridLayoutManager(
+                                this@MainActivity,
+                                ImageGridHelper.calculateColumnSpan(recyclerViewImages.width))
+
+                        recyclerViewImages.adapter = mImageAdapter
+
+                        recyclerViewImages.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

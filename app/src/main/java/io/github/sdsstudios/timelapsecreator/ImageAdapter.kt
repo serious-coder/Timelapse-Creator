@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 
 /**
- * Created by sethsch1 on 21/02/18.
+ * Created by Seth on 21/02/18.
  */
 
 class ImageAdapter(
@@ -18,16 +18,31 @@ class ImageAdapter(
         var uriList: MutableList<Uri>
 ) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
+    private var mImageWidthPx: Int = 0
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.adapter_image, null)
+
+        view.layoutParams = RecyclerView.LayoutParams(mImageWidthPx, mImageWidthPx)
 
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         holder!!.apply {
-            Picasso.with(mAppCtx).load(uriList[position]).resize(400, 400).centerCrop().into(imageView)
+            Picasso.with(mAppCtx)
+                    .load(uriList[position])
+                    .resize(mImageWidthPx, mImageWidthPx)
+                    .centerCrop()
+                    .into(imageView)
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+
+        val columnSpan = ImageGridHelper.calculateColumnSpan(recyclerView!!.width)
+        mImageWidthPx = ImageGridHelper.calculateImageWidthPx(columnSpan, recyclerView.width)
     }
 
     override fun getItemCount() = uriList.size
