@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         private const val KEY_TIMELAPSE_NAME = "timelapse_name"
         private const val KEY_FRAMES_PER_SECOND = "fps"
         private const val KEY_IMAGES = "images"
+        private const val KEY_IMAGE_TYPE = "image_type"
     }
 
     override var directory: String = ""
@@ -37,6 +38,16 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         get() = editTextFPS.text.toString().toIntOrZero()
         set(value) {
             if (value != 0) editTextFPS.setText(value.toString())
+        }
+
+    override var imageType: ImageType
+        get() = when (spinnerImageType.selectedItemPosition) {
+            0 -> ImageType.JPG
+            else -> ImageType.PNG
+        }
+        set(value) = when (value) {
+            ImageType.JPG -> spinnerImageType.setSelection(0)
+            else -> spinnerImageType.setSelection(1)
         }
 
     private val mImageAdapter by lazy {
@@ -79,7 +90,12 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         outState!!.putString(KEY_DIRECTORY, directory)
         outState.putString(KEY_TIMELAPSE_NAME, timelapseName)
         outState.putInt(KEY_FRAMES_PER_SECOND, framesPerSecond)
-        outState.putStringArray(KEY_IMAGES, mImageAdapter.uriList.map { it.toString() }.toTypedArray())
+        outState.putStringArray(KEY_IMAGES,
+                mImageAdapter.uriList.map { it.toString() }.toTypedArray())
+
+        val imageTypeInt = if (imageType == ImageType.JPG) 0 else 1
+
+        outState.putInt(KEY_IMAGE_TYPE, imageTypeInt)
 
         super.onSaveInstanceState(outState)
     }
@@ -90,6 +106,10 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         directory = savedInstanceState!!.getString(KEY_DIRECTORY)
         timelapseName = savedInstanceState.getString(KEY_TIMELAPSE_NAME)
         framesPerSecond = savedInstanceState.getInt(KEY_FRAMES_PER_SECOND)
+
+        val imageTypeInt = savedInstanceState.getInt(KEY_IMAGE_TYPE)
+
+        imageType = if (imageTypeInt == 0) ImageType.JPG else ImageType.PNG
 
         mImageAdapter.uriList = savedInstanceState.getStringArray(KEY_IMAGES)
                 .map { Uri.parse(it) }.toMutableList()

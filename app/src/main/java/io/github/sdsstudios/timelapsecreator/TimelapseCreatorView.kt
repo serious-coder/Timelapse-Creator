@@ -8,6 +8,7 @@ interface TimelapseCreatorView {
     var directory: String
     var timelapseName: String
     var framesPerSecond: Int
+    var imageType: ImageType
 
     fun anyErrors(): Boolean
     fun changeProgressBar()
