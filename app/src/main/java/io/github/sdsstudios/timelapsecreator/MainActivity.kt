@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         private const val KEY_TIMELAPSE_NAME = "timelapse_name"
         private const val KEY_FRAMES_PER_SECOND = "fps"
         private const val KEY_IMAGES = "images"
-        private const val KEY_IMAGE_TYPE = "image_type"
     }
 
     override var directory: String = ""
@@ -40,15 +39,8 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
             if (value != 0) editTextFPS.setText(value.toString())
         }
 
-    override var imageType: String
-        get() = when (spinnerImageType.selectedItemPosition) {
-            0 -> ImageType.JPG
-            else -> ImageType.PNG
-        }
-        set(value) = when (value) {
-            ImageType.JPG -> spinnerImageType.setSelection(0)
-            else -> spinnerImageType.setSelection(1)
-        }
+    override val uriList: List<Uri>
+        get() = mImageAdapter.uriList
 
     private val mImageAdapter by lazy {
         ImageAdapter(applicationContext, ArrayList())
@@ -67,8 +59,11 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         textInputLayoutFPS.onTextChanged { textInputLayoutFPS.checkForErrors() }
         textInputLayoutTimelapseName.onTextChanged { textInputLayoutTimelapseName.checkForErrors() }
 
-        buttonChoosePhotos.setOnClickListener { chooseDirectory() }
-        buttonCreate.setOnClickListener { mTimelapseManager.createTimelapse() }
+        buttonSelectImages.setOnClickListener { openDocumentsUI() }
+
+        buttonCreate.setOnClickListener {
+            mTimelapseManager.createTimelapse()
+        }
 
         recyclerViewImages.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -92,7 +87,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         outState.putInt(KEY_FRAMES_PER_SECOND, framesPerSecond)
         outState.putStringArray(KEY_IMAGES,
                 mImageAdapter.uriList.map { it.toString() }.toTypedArray())
-        outState.putString(KEY_IMAGE_TYPE, imageType)
 
         super.onSaveInstanceState(outState)
     }
@@ -103,7 +97,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         directory = savedInstanceState!!.getString(KEY_DIRECTORY)
         timelapseName = savedInstanceState.getString(KEY_TIMELAPSE_NAME)
         framesPerSecond = savedInstanceState.getInt(KEY_FRAMES_PER_SECOND)
-        imageType = savedInstanceState.getString(KEY_IMAGE_TYPE)
 
         mImageAdapter.uriList = savedInstanceState.getStringArray(KEY_IMAGES)
                 .map { Uri.parse(it) }.toMutableList()
@@ -116,11 +109,7 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
             val uri = data!!.clipData
 
             if (uri == null) {
-                Snackbar.make(
-                        constraintLayout,
-                        R.string.error_must_select_more_than_one,
-                        Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackbarMessage(R.string.error_must_select_more_than_one)
 
             } else {
                 val uriList = buildSequence {
@@ -138,8 +127,12 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showMessage(stringId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showSnackbarMessage(stringId: Int) {
+        Snackbar.make(
+                constraintLayout,
+                stringId,
+                Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     override fun anyErrors(): Boolean {
@@ -186,14 +179,10 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         })
     }
 
-    private fun chooseDirectory() {
-        openDocumentsUI()
-    }
-
     private fun openDocumentsUI() {
         val intent = Intent()
 
-        intent.type = imageType
+        intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.action = Intent.ACTION_GET_CONTENT
 
