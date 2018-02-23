@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -34,7 +35,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonChooseOutputDirectory" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewOutputDirectory" />
 
         <Button
             android:id="@+id/buttonChooseImageDirectory"
@@ -47,7 +48,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewDirectory"
+            android:id="@+id/textViewImageDirectory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -61,13 +62,13 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutTimelapseName"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/textView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDirectory">
+            app:layout_constraintTop_toBottomOf="@+id/textViewImageDirectory">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/editTextTimelapseName"
@@ -85,11 +86,11 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:gravity="bottom"
+            android:gravity="center_vertical"
             android:text=".mp4"
             app:layout_constraintBottom_toTopOf="@+id/textInputLayoutStartNumber"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDirectory"
+            app:layout_constraintTop_toBottomOf="@+id/textViewImageDirectory"
             tools:ignore="HardcodedText" />
 
         <android.support.design.widget.TextInputLayout
@@ -98,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutTimelapseName">
@@ -149,7 +151,6 @@
 
         </android.support.design.widget.TextInputLayout>
 
-
         <Button
             android:id="@+id/buttonChooseOutputDirectory"
             android:layout_width="wrap_content"
@@ -159,6 +160,18 @@
             android:text="@string/btn_choose_output_directory"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutFPS" />
+
+        <TextView
+            android:id="@+id/textViewOutputDirectory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonChooseOutputDirectory"
+            tools:text="/storage/emulated/0" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
