@@ -1,17 +1,15 @@
 <resources>
     <string name="app_name">Timelapse Creator</string>
 
-    <string-array name="image_type_array">
-        <item>.jpg/.JPG/.jpeg/.JPEG</item>
-        <item>.png</item>
-    </string-array>
-
     <!-- Button titles -->
     <string name="btn_create">Create</string>
-    <string name="btn_select_images">Select Images</string>
+    <string name="btn_choose_image_directory">Choose Image Directory</string>
+    <string name="btn_choose_output_directory">Choose Output Directory</string>
     <!-- Button titles -->
 
     <!-- Hints -->
+    <string name="hint_starting_number">Start Number</string>
+    <string name="hint_frame_count">Frame Count</string>
     <string name="hint_fps">Frames per Second</string>
     <string name="hint_timelapse_name">Timelapse Name</string>
     <!-- Hints -->
@@ -19,9 +17,5 @@
     <!-- Error messages -->
     <string name="error_cant_be_empty">Can\'t be empty!</string>
     <string name="error_cant_equal_zero">Can\'t equal zero!</string>
-    <string name="error_must_select_more_than_one">Must select multiple pictures!</string>
-    <string name="error_must_select_images">Must select images!</string>
-    <string name="errors_need_solving">Errors need solving!</string>
     <!-- Error messages -->
-
 </resources>
