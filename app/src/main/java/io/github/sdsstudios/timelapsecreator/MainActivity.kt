@@ -1,5 +1,8 @@
 package io.github.sdsstudios.timelapsecreator
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
@@ -10,6 +13,11 @@ import android.text.TextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
+
+    companion object {
+        private const val REQUEST_CODE_SELECT_IMAGE_DIRECTORY = 34
+        private const val REQUEST_CODE_SELECT_OUTPUT_DIRECTORY = 56
+    }
 
     override var imageDirectory: String
         get() = textViewImageDirectory.text.toString()
@@ -52,11 +60,11 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         setContentView(R.layout.activity_main)
 
         buttonChooseImageDirectory.setOnClickListener {
-
+            openDocumentsUI(REQUEST_CODE_SELECT_IMAGE_DIRECTORY)
         }
 
         buttonChooseOutputDirectory.setOnClickListener {
-
+            openDocumentsUI(REQUEST_CODE_SELECT_OUTPUT_DIRECTORY)
         }
 
         buttonCreate.setOnClickListener { mTimelapseManager.createTimelapse() }
@@ -67,8 +75,21 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (resultCode == Activity.RESULT_OK) {
 
+            when (requestCode) {
+
+                REQUEST_CODE_SELECT_IMAGE_DIRECTORY -> {
+                    imageDirectory = data!!.data.path
+                    copyFilesToTempFolder(data.data)
+                }
+                REQUEST_CODE_SELECT_OUTPUT_DIRECTORY -> {
+                    outputDirectory = data!!.data.path
+                }
+            }
         }
     }
 
@@ -131,5 +152,10 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 onTextChanged()
             }
         })
+    }
+
+    private fun openDocumentsUI(requestCode: Int) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(intent, requestCode)
     }
 }
