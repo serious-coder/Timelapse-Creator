@@ -11,6 +11,8 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
+
 
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
@@ -54,6 +56,8 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 textInputLayoutImageName
         )
     }
+
+    private val TEMP_DIR by lazy { "$filesDir/TEMP" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +156,14 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 onTextChanged()
             }
         })
+    }
+
+    private fun copyFilesToTempFolder(uri: Uri) {
+        createTempFolder()
+    }
+
+    private fun createTempFolder(){
+        File(TEMP_DIR).mkdirs()
     }
 
     private fun openDocumentsUI(requestCode: Int) {
