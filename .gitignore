@@ -7,3 +7,5 @@
 /build
 /captures
 .externalNativeBuild
+
+app/src/test/java/io/github/sdsstudios/timelapsecreator/ExampleUnitTest\.kt

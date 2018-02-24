@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 textInputLayoutFPS,
                 textInputLayoutTimelapseName,
                 textInputLayoutFrameCount,
-                textInputLayoutStartNumber
+                textInputLayoutStartNumber,
+                textInputLayoutImageName
         )
     }
 
@@ -66,18 +67,12 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         }
     }
 
-    private fun String.toIntOrZero(): Int {
-        try {
-            return this.toInt()
 
-        } catch (e: NumberFormatException) {
 
-            return 0
         }
     }
 
     override fun anyErrors(): Boolean {
-
         if (textViewImageDirectory.text.isBlank() || textViewOutputDirectory.text.isBlank()) {
             return true
         }
@@ -97,6 +92,15 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         ).show()
     }
 
+    private fun String.toIntOrZero(): Int {
+        try {
+            return this.toInt()
+
+        } catch (e: NumberFormatException) {
+
+            return 0
+        }
+    }
 
     private fun TextInputLayout.checkForErrors() {
         val text = editText!!.text
