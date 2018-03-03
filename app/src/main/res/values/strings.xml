@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Timelapse Creator</string>
     <string name="image_name_help"><![CDATA[E.g IMG_&+d.jpg \'&+d\' is where the image number should go.]]></string>
+    <string name="num_placeholder"><![CDATA[&+d]]></string>
 
     <!-- Button titles -->
     <string name="btn_create">Create</string>
