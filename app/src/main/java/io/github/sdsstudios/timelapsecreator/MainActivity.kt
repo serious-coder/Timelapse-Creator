@@ -108,6 +108,8 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
     }
 
+    override fun getStringRes(resId: Int): String = getString(resId)
+
     override fun showSnackbarMessage(stringId: Int) {
         Snackbar.make(
                 constraintLayout,

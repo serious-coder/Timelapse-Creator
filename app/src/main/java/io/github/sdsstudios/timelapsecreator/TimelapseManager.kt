@@ -32,7 +32,7 @@ class TimelapseManager(private val mView: TimelapseCreatorView) {
 
     private fun createImageName(number: Int): String {
         return mView.imageName.replace(
-                mView.ctx.getString(R.string.num_placeholder),
+                mView.getStringRes(R.string.num_placeholder),
                 number.toString()
         )
     }

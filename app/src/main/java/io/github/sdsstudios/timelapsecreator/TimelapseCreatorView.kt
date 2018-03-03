@@ -19,4 +19,5 @@ interface TimelapseCreatorView {
     fun anyErrors(): Boolean
     fun changeProgressBar()
     fun showSnackbarMessage(stringId: Int)
+    fun getStringRes(resId: Int): String
 }
