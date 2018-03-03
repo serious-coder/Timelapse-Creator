@@ -85,12 +85,12 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
                 REQUEST_CODE_SELECT_IMAGE_DIRECTORY -> {
                     inputUri = data!!.data
-                    textViewImageDirectory.text = inputUri?.path
+                    textViewImageDirectory.text = FileUtils.getDirPath(inputUri!!)
                 }
 
                 REQUEST_CODE_SELECT_OUTPUT_DIRECTORY -> {
                     outputUri = data!!.data
-                    textViewOutputDirectory.text = outputUri?.path
+                    textViewOutputDirectory.text = FileUtils.getDirPath(outputUri!!)
                 }
             }
         }
