@@ -8,7 +8,7 @@ import android.os.Environment
  */
 
 object FileUtils {
-    fun getFilePath(uri: Uri): String {
+    fun getDirPath(uri: Uri): String {
         val path = uri.path.removePrefix("/tree/")
 
         val splitPath = path.split(':')
