@@ -11,8 +11,6 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
-
 
 class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
@@ -21,20 +19,14 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
         private const val REQUEST_CODE_SELECT_OUTPUT_DIRECTORY = 56
     }
 
-    override var imageDirectory: String
-        get() = textViewImageDirectory.text.toString()
-        set(value) {
-            textViewImageDirectory.text = value
-        }
-
-    override var outputDirectory: String
-        get() = textViewOutputDirectory.text.toString()
-        set(value) {
-            textViewOutputDirectory.text = value
-        }
+    override var inputUri: Uri? = null
+    override var outputUri: Uri? = null
 
     override val timelapseName: String
         get() = editTextTimelapseName.text.toString()
+
+    override val imageName: String
+        get() = editTextImageName.text.toString()
 
     override val framesPerSecond: Int
         get() = editTextFPS.text.toString().toIntOrZero()
@@ -44,6 +36,9 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
     override val frameCount: Int
         get() = editTextTimelapseName.text.toString().toIntOrZero()
+
+    override val privateDir: String
+        get() = filesDir.path
 
     private val mTimelapseManager = TimelapseManager(this)
 
@@ -56,8 +51,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 textInputLayoutImageName
         )
     }
-
-    private val TEMP_DIR by lazy { "$filesDir/TEMP" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +66,10 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
 
         buttonCreate.setOnClickListener { mTimelapseManager.createTimelapse() }
 
+        buttonInsertPlaceholder.setOnClickListener {
+            editTextImageName.append(getString(R.string.num_placeholder))
+        }
+
         mTextInputLayoutList.forEach {
             it.checkForErrors()
             it.onTextChanged { it.checkForErrors() }
@@ -87,11 +84,13 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
             when (requestCode) {
 
                 REQUEST_CODE_SELECT_IMAGE_DIRECTORY -> {
-                    imageDirectory = data!!.data.path
-                    copyFilesToTempFolder(data.data)
+                    inputUri = data!!.data
+                    textViewImageDirectory.text = inputUri?.path
                 }
+
                 REQUEST_CODE_SELECT_OUTPUT_DIRECTORY -> {
-                    outputDirectory = data!!.data.path
+                    outputUri = data!!.data
+                    textViewOutputDirectory.text = outputUri?.path
                 }
             }
         }
@@ -156,14 +155,6 @@ class MainActivity : AppCompatActivity(), TimelapseCreatorView {
                 onTextChanged()
             }
         })
-    }
-
-    private fun copyFilesToTempFolder(uri: Uri) {
-        createTempFolder()
-    }
-
-    private fun createTempFolder(){
-        File(TEMP_DIR).mkdirs()
     }
 
     private fun openDocumentsUI(requestCode: Int) {
